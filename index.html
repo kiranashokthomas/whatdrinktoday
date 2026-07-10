@@ -20,8 +20,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes drift{0%{opacity:.7}100%{opacity:1}}
 h1,h2,h3{font-family:'Playfair Display',serif}
 ::selection{background:var(--gold);color:#000}
-
-/* NAV */
 .nav{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;
   position:sticky;top:0;z-index:50;background:rgba(11,11,14,0.85);
   backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
@@ -32,8 +30,6 @@ h1,h2,h3{font-family:'Playfair Display',serif}
 .nav-links a:hover{color:var(--gold)}
 .screen{display:none;position:relative;z-index:1;min-height:calc(100vh - 73px)}
 .screen.active{display:block}
-
-/* HOME */
 .hero{text-align:center;padding:100px 20px 40px}
 .hero-tag{font-size:.7rem;font-weight:700;letter-spacing:4px;color:var(--gold);text-transform:uppercase;
   margin-bottom:18px;opacity:0;animation:fadeUp .6s .1s forwards}
@@ -56,8 +52,6 @@ h1,h2,h3{font-family:'Playfair Display',serif}
 .hiw-card:hover{transform:translateY(-4px);border-color:rgba(212,175,55,0.5)}
 .hiw-num{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.6rem;font-weight:900;margin-bottom:8px}
 .hiw-card p{color:var(--muted);font-size:.82rem;line-height:1.5}
-
-/* PICK */
 .pick-wrap{max-width:820px;margin:0 auto;padding:60px 24px 40px}
 .pick-header{text-align:center;margin-bottom:36px}
 .step-pill{display:inline-block;background:rgba(212,175,55,0.12);color:var(--gold);
@@ -85,8 +79,6 @@ h1,h2,h3{font-family:'Playfair Display',serif}
   letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .btn-primary:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 .btn-primary:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(212,175,55,0.3)}
-
-/* WHEEL */
 .wheel-wrap{display:flex;flex-direction:column;align-items:center;padding:60px 20px 90px}
 .wheel-title{text-align:center;margin-bottom:34px}
 .wheel-title h2{font-size:1.8rem;font-weight:800}
@@ -96,7 +88,7 @@ h1,h2,h3{font-family:'Playfair Display',serif}
   width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;
   border-top:24px solid var(--gold);z-index:5;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4))}
 #wheelCanvas{width:100%;height:100%;border-radius:50%;
-  box-shadow:0 0 0 6px var(--card2),0 0 0 8px var(--line),0 20px 60px rgba(0,0,0,0.6)}
+  box-shadow:0 0 0 6px var(--card2),0 0 0 8px var(--line),0 20px 60px rgba(0,0,0,0.6);transition:transform 3.5s cubic-bezier(.17,.89,.32,1.28)}
 .wheel-hub{position:absolute;top:50%;left:50%;width:54px;height:54px;
   background:radial-gradient(circle,var(--gold2),var(--gold));border-radius:50%;
   transform:translate(-50%,-50%);box-shadow:0 4px 14px rgba(0,0,0,0.5);
@@ -106,8 +98,6 @@ h1,h2,h3{font-family:'Playfair Display',serif}
   text-transform:uppercase;cursor:pointer;transition:all .25s;box-shadow:0 12px 36px rgba(212,175,55,0.3)}
 .spin-btn:hover:not(:disabled){transform:translateY(-3px) scale(1.03)}
 .spin-btn:disabled{opacity:.4;cursor:not-allowed}
-
-/* RESULT */
 .result-wrap{max-width:480px;margin:0 auto;padding:70px 24px 90px;text-align:center;animation:popIn .4s ease}
 @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 .result-card{background:var(--card);border:1px solid var(--line);border-radius:28px;
@@ -121,8 +111,6 @@ h1,h2,h3{font-family:'Playfair Display',serif}
 .result-glass{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:22px}
 .result-desc{color:#b8b6ae;font-size:.92rem;line-height:1.7;margin-bottom:26px}
 .result-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
-
-/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);
   z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.active{display:flex}
@@ -142,10 +130,100 @@ button:focus-visible,.chip:focus-visible{outline:2px solid var(--gold);outline-o
 </style>
 </head>
 <body>
-
 <nav class="nav">
   <div class="logo" onclick="goHome()">WHAT<span>TO</span>DRINK</div>
   <div class="nav-links">
     <a onclick="goHome()">Home</a>
-    <a onclick="goPick()">Pick Drinks</a>
   </div>
+</nav>
+<section class="screen active" id="home">
+  <div class="hero">
+    <div class="hero-tag">Can't decide? Let the wheel decide.</div>
+    <h1>Choose your drinks.<em>We'll pick the winner.</em></h1>
+    <p class="hero-sub">Pick a few options you're torn between, spin the wheel, and get a real recipe in seconds. No overthinking required.</p>
+  </div>
+  <div class="cta-wrap"><button class="cta" onclick="goPick()">Start Choosing</button></div>
+  <div class="how-it-works">
+    <div class="hiw-card"><div class="hiw-num">01</div><p>Select 2–6 drinks you're considering</p></div>
+    <div class="hiw-card"><div class="hiw-num">02</div><p>Spin the wheel — it decides for you</p></div>
+    <div class="hiw-card"><div class="hiw-num">03</div><p>Get the full recipe instantly</p></div>
+  </div>
+</section>
+<section class="screen" id="pick">
+  <div class="pick-wrap">
+    <div class="pick-header">
+      <div class="step-pill">Step 1 of 2</div>
+      <h2>What are you torn between?</h2>
+      <p>Selected: <span class="counter" id="pickCount">0</span> / 6 &nbsp; (pick at least 2)</p>
+    </div>
+    <div class="chip-grid" id="chipGrid"></div>
+    <div class="pick-actions">
+      <button class="btn-ghost" onclick="goHome()">← Back</button>
+      <button class="btn-primary" id="toWheelBtn" disabled onclick="goWheel()">Spin the Wheel →</button>
+    </div>
+  </div>
+</section>
+<section class="screen" id="wheel">
+  <div class="wheel-wrap">
+    <div class="wheel-title">
+      <h2>Give it a spin</h2>
+      <p>Let fate — not indecision — choose your drink</p>
+    </div>
+    <div class="wheel-stage">
+      <div class="wheel-pointer"></div>
+      <canvas id="wheelCanvas" width="600" height="600"></canvas>
+      <div class="wheel-hub">🎲</div>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()">Spin Now</button>
+  </div>
+</section>
+<section class="screen" id="result">
+  <div class="result-wrap">
+    <div class="result-card">
+      <div class="result-tag">The wheel has spoken</div>
+      <span class="result-emoji" id="resEmoji">🍸</span>
+      <h2 id="resName">Drink Name</h2>
+      <div class="result-glass" id="resGlass">Glass Type</div>
+      <p class="result-desc" id="resDesc">Description</p>
+      <div class="result-actions">
+        <button class="btn-ghost" onclick="openRecipe()">View Recipe →</button>
+        <button class="btn-primary" onclick="goPick()">Spin Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal-overlay" id="recipeModal">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" onclick="closeRecipe()">×</button>
+    <span class="r-emoji" style="font-size:3rem;display:block;text-align:center;margin-bottom:10px" id="mEmoji">🍸</span>
+    <h2 style="text-align:center;font-size:1.5rem;margin-bottom:4px" id="mName">Drink Name</h2>
+    <p style="text-align:center;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px" id="mGlass">Glass</p>
+    <div class="r-section"><h3>Ingredients</h3><ul id="mIngredients"></ul></div>
+    <div class="r-section"><h3>Method</h3><p id="mMethod"></p></div>
+  </div>
+</div>
+<script>
+const DRINKS=[{name:'Old Fashioned',emoji:'🥃',glass:'Rocks Glass',desc:'A timeless whiskey classic — bold, bitter, and beautifully simple.',ingredients:['60ml Bourbon or Rye','1 Sugar cube','2 dashes Angostura bitters','Orange peel','Ice'],method:'Muddle sugar with bitters and a splash of water. Add whiskey and ice, stir well, garnish with orange peel.'},{name:'Margarita',emoji:'🍹',glass:'Coupe Glass',desc:'Zesty, salty, and endlessly refreshing — the ultimate crowd pleaser.',ingredients:['50ml Tequila','25ml Lime juice','20ml Triple sec','Salt rim','Ice'],method:'Shake all ingredients with ice, strain into a salt-rimmed glass, garnish with lime wheel.'},{name:'Mojito',emoji:'🍃',glass:'Highball Glass',desc:'Cool mint and lime over rum — the definition of easy summer sipping.',ingredients:['50ml White rum','10 Mint leaves','25ml Lime juice','2 tsp Sugar','Soda water','Ice'],method:'Muddle mint, lime and sugar. Add rum and ice, top with soda water, stir gently and garnish with mint.'},{name:'Espresso Martini',emoji:'☕',glass:'Martini Glass',desc:'Silky, bold, and buzzing — dessert and nightcap in one glass.',ingredients:['50ml Vodka','30ml Coffee liqueur','30ml Fresh espresso (cooled)','Ice'],method:'Shake hard with ice until frothy, double strain into a chilled martini glass, garnish with coffee beans.'},{name:'Negroni',emoji:'🍊',glass:'Rocks Glass',desc:'Bitter, herbal, and unapologetically strong — an acquired love.',ingredients:['25ml Gin','25ml Campari','25ml Sweet vermouth','Orange peel','Ice'],method:'Stir all ingredients with ice, strain over fresh ice, garnish with orange peel.'},{name:'Piña Colada',emoji:'🍍',glass:'Hurricane Glass',desc:'Creamy, tropical, and impossible not to smile at.',ingredients:['50ml White rum','90ml Pineapple juice','30ml Coconut cream','Ice'],method:'Blend all ingredients with ice until smooth, pour into a hurricane glass, garnish with pineapple wedge.'},{name:'Whiskey Sour',emoji:'🍋',glass:'Rocks Glass',desc:'Tart, smooth, and perfectly balanced — a bartender's favourite.',ingredients:['50ml Bourbon','25ml Lemon juice','20ml Sugar syrup','1 Egg white (optional)','Ice'],method:'Dry shake (without ice), then shake again with ice. Strain over fresh ice, garnish with a cherry.'},{name:'Cosmopolitan',emoji:'💅',glass:'Martini Glass',desc:'Sleek, tart-sweet, and always a little glamorous.',ingredients:['40ml Vodka','15ml Triple sec','15ml Cranberry juice','10ml Lime juice','Ice'],method:'Shake all ingredients with ice, strain into a chilled martini glass, garnish with lime twist.'},{name:'Aperol Spritz',emoji:'🧡',glass:'Wine Glass',desc:'Light, bubbly, and orange-bright — an easy-drinking aperitif.',ingredients:['60ml Aperol','90ml Prosecco','Soda water splash','Orange slice','Ice'],method:'Build over ice in a wine glass: Aperol, then prosecco, top with soda, garnish with orange slice.'},{name:'Dark & Stormy',emoji:'⚡',glass:'Highball Glass',desc:'Spicy ginger heat meets deep rum — punchy and warming.',ingredients:['50ml Dark rum','120ml Ginger beer','Lime wedge','Ice'],method:'Pour rum over ice, top with ginger beer, squeeze in lime and stir gently.'},{name:'Mai Tai',emoji:'🌴',glass:'Rocks Glass',desc:'Layered rum and citrus — tiki nostalgia in every sip.',ingredients:['30ml White rum','30ml Dark rum','20ml Lime juice','15ml Orange curaçao','10ml Orgeat syrup','Ice'],method:'Shake all ingredients with ice, pour unstrained into glass, garnish with mint and lime.'},{name:'French 75',emoji:'🥂',glass:'Champagne Flute',desc:'Elegant, fizzy, and just gin-forward enough to feel special.',ingredients:['30ml Gin','15ml Lemon juice','10ml Sugar syrup','Champagne top','Ice'],method:'Shake gin, lemon and syrup with ice, strain into flute, top with chilled champagne.'},{ name: 'Virgin Mojito', emoji: '🍃', glass: 'Highball Glass', desc: 'All the freshness, none of the alcohol — a perfect mocktail.', ingredients: ['10 Mint leaves', '25ml Lime juice', '2 tsp Sugar', 'Soda water', 'Ice'], method: 'Muddle mint, lime and sugar, top with soda water and ice, stir and garnish with mint.' }];
+let selected=[];
+function goHome(){switchScreen('home')}
+function goPick(){renderChips();switchScreen('pick')}
+function switchScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function renderChips(){const grid=document.getElementById('chipGrid');grid.innerHTML='';DRINKS.forEach((d,i)=>{const chip=document.createElement('div');chip.className='chip'+(selected.includes(i)?' selected':'');chip.tabIndex=0;chip.innerHTML=`<span class="emoji">${d.emoji}</span><span class="name">${d.name}</span>`;chip.onclick=()=>toggleChip(i);grid.appendChild(chip)});updateCount()}
+function toggleChip(i){const idx=selected.indexOf(i);if(idx>-1)selected.splice(idx,1);else if(selected.length<6)selected.push(i);renderChips()}
+function updateCount(){document.getElementById('pickCount').textContent=selected.length;document.getElementById('toWheelBtn').disabled=selected.length<2}
+let wheelSelection=[];
+let currentWinner=null;
+const canvas=document.getElementById('wheelCanvas');
+const ctx=canvas.getContext('2d');
+const colors=['#d4af37','#8a2be2','#e8734a','#2ecc71','#4aa8e8','#e84a8c'];
+function drawWheel(items){const n=items.length;const cx=300,cy=300,r=290;ctx.clearRect(0,0,600,600);const slice=(2*Math.PI)/n;items.forEach((idx,i)=>{const start=i*slice,end=start+slice;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,end);ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.save();ctx.translate(cx,cy);ctx.rotate(start+slice/2);ctx.textAlign='right';ctx.fillStyle='#0b0b0e';ctx.font='bold 22px Inter, sans-serif';ctx.fillText(DRINKS[idx].emoji+' '+DRINKS[idx].name,r-20,6);ctx.restore()})}
+function goWheel(){wheelSelection=[...selected];canvas.style.transform='rotate(0deg)';drawWheel(wheelSelection);document.getElementById('spinBtn').disabled=false;document.getElementById('spinBtn').textContent='Spin Now';switchScreen('wheel')}
+function spinWheel(){const btn=document.getElementById('spinBtn');btn.disabled=true;btn.textContent='Spinning...';const n=wheelSelection.length;const winnerPos=Math.floor(Math.random()*n);currentWinner=wheelSelection[winnerPos];const slice=360/n;const targetAngle=360*5+360-(winnerPos*slice+slice/2);canvas.style.transition='transform 3.5s cubic-bezier(.17,.89,.32,1.28)';canvas.style.transform=`rotate(${targetAngle}deg)`;setTimeout(()=>showResult(currentWinner),3700)}
+function showResult(idx){const d=DRINKS[idx];document.getElementById('resEmoji').textContent=d.emoji;document.getElementById('resName').textContent=d.name;document.getElementById('resGlass').textContent=d.glass;document.getElementById('resDesc').textContent=d.desc;switchScreen('result')}
+function openRecipe(){const d=DRINKS[currentWinner];document.getElementById('mEmoji').textContent=d.emoji;document.getElementById('mName').textContent=d.name;document.getElementById('mGlass').textContent=d.glass;document.getElementById('mIngredients').innerHTML=d.ingredients.map(x=>`<li>${x}</li>`).join('');document.getElementById('mMethod').textContent=d.method;document.getElementById('recipeModal').classList.add('active')}
+function closeRecipe(){document.getElementById('recipeModal').classList.remove('active')}
+document.getElementById('recipeModal').addEventListener('click',e=>{if(e.target.id==='recipeModal')closeRecipe()});
+renderChips();
+</script>
+</body>
+</html>
