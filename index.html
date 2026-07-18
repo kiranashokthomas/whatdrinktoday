@@ -135,3 +135,154 @@ h1,h2,h3{font-family:'Playfair Display',serif}
     </div>
     <button class="spin-btn" id="spinBtn" onclick="spinWheel()">Spin Now</button>
   </div>
+  </section>
+
+<section class="screen" id="result">
+  <div class="result-wrap">
+    <div class="result-card">
+      <div class="result-tag">The wheel has spoken</div>
+      <span class="result-emoji" id="resEmoji"></span>
+      <h2 id="resName"></h2>
+      <div class="result-glass" id="resGlass"></div>
+      <p class="result-desc" id="resDesc"></p>
+      <div class="result-actions">
+        <button class="btn-ghost" onclick="openRecipe()">View Recipe</button>
+        <button class="btn-primary" onclick="goPick()">Spin Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="recipeModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeRecipe()">✕</button>
+    <span style="font-size:3rem;display:block;text-align:center;margin-bottom:10px" id="mEmoji"></span>
+    <h2 style="text-align:center;font-size:1.5rem;margin-bottom:4px" id="mName"></h2>
+    <p style="text-align:center;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px" id="mGlass"></p>
+    <div class="r-section"><h3>Ingredients</h3><ul id="mIngredients"></ul></div>
+    <div class="r-section"><h3>Method</h3><p id="mMethod"></p></div>
+  </div>
+</div>
+
+<script>
+const DRINKS=[
+  {name:"Old Fashioned",emoji:"🥃",glass:"Rocks Glass",desc:"A timeless whiskey classic — bold, bitter, and beautifully simple.",ingredients:["60ml Bourbon or Rye","1 Sugar cube","2 dashes Angostura bitters","Orange peel","Ice"],method:"Muddle sugar with bitters and a splash of water. Add whiskey and ice, stir well, garnish with orange peel."},
+  {name:"Margarita",emoji:"🍹",glass:"Coupe Glass",desc:"Zesty, salty, and endlessly refreshing — the ultimate crowd pleaser.",ingredients:["50ml Tequila","25ml Lime juice","20ml Triple sec","Salt rim","Ice"],method:"Shake all ingredients with ice, strain into a salt-rimmed glass, garnish with lime wheel."},
+  {name:"Mojito",emoji:"🌿",glass:"Highball Glass",desc:"Cool mint and lime over rum — the definition of easy summer sipping.",ingredients:["50ml White rum","10 Mint leaves","25ml Lime juice","2 tsp Sugar","Soda water","Ice"],method:"Muddle mint, lime and sugar. Add rum and ice, top with soda water, stir gently and garnish with mint."},
+  {name:"Espresso Martini",emoji:"☕",glass:"Martini Glass",desc:"Silky, bold, and buzzing — dessert and nightcap in one glass.",ingredients:["50ml Vodka","30ml Coffee liqueur","30ml Fresh espresso (cooled)","Ice"],method:"Shake hard with ice until frothy, double strain into a chilled martini glass, garnish with coffee beans."},
+  {name:"Negroni",emoji:"🍊",glass:"Rocks Glass",desc:"Bitter, herbal, and unapologetically strong — an acquired love.",ingredients:["25ml Gin","25ml Campari","25ml Sweet vermouth","Orange peel","Ice"],method:"Stir all ingredients with ice, strain over fresh ice, garnish with orange peel."},
+  {name:"Piña Colada",emoji:"🍍",glass:"Hurricane Glass",desc:"Creamy, tropical, and impossible not to smile at.",ingredients:["50ml White rum","90ml Pineapple juice","30ml Coconut cream","Ice"],method:"Blend all ingredients with ice until smooth, pour into a hurricane glass, garnish with pineapple wedge."},
+  {name:"Whiskey Sour",emoji:"🍋",glass:"Rocks Glass",desc:"Tart, smooth, and perfectly balanced — a bartender's favourite.",ingredients:["50ml Bourbon","25ml Lemon juice","20ml Sugar syrup","1 Egg white (optional)","Ice"],method:"Dry shake without ice, then shake again with ice. Strain over fresh ice, garnish with a cherry."},
+  {name:"Cosmopolitan",emoji:"🩷",glass:"Martini Glass",desc:"Sleek, tart-sweet, and always a little glamorous.",ingredients:["40ml Vodka","15ml Triple sec","15ml Cranberry juice","10ml Lime juice","Ice"],method:"Shake all ingredients with ice, strain into a chilled martini glass, garnish with lime twist."},
+  {name:"Aperol Spritz",emoji:"🧡",glass:"Wine Glass",desc:"Light, bubbly, and orange-bright — an easy-drinking aperitif.",ingredients:["60ml Aperol","90ml Prosecco","Soda water splash","Orange slice","Ice"],method:"Build over ice in a wine glass — Aperol, then prosecco, top with soda, garnish with orange slice."},
+  {name:"Dark & Stormy",emoji:"⛈️",glass:"Highball Glass",desc:"Spicy ginger heat meets deep rum — punchy and warming.",ingredients:["50ml Dark rum","120ml Ginger beer","Lime wedge","Ice"],method:"Pour rum over ice, top with ginger beer, squeeze in lime and stir gently."},
+  {name:"Mai Tai",emoji:"🌺",glass:"Rocks Glass",desc:"Layered rum and citrus — tiki nostalgia in every sip.",ingredients:["30ml White rum","30ml Dark rum","20ml Lime juice","15ml Orange curaçao","10ml Orgeat syrup","Ice"],method:"Shake all ingredients with ice, pour unstrained into glass, garnish with mint and lime."},
+  {name:"French 75",emoji:"🥂",glass:"Champagne Flute",desc:"Elegant, fizzy, and just gin-forward enough to feel special.",ingredients:["30ml Gin","15ml Lemon juice","10ml Sugar syrup","Champagne to top","Ice"],method:"Shake gin, lemon and syrup with ice, strain into flute, top with chilled champagne."},
+  {name:"Virgin Mojito",emoji:"🌱",glass:"Highball Glass",desc:"All the freshness, none of the alcohol — a perfect mocktail.",ingredients:["10 Mint leaves","25ml Lime juice","2 tsp Sugar","Soda water","Ice"],method:"Muddle mint, lime and sugar, top with soda water and ice, stir and garnish with mint."}
+];
+
+let selected=[];
+let currentWinner=null;
+let spinning=false;
+
+function goHome(){switchScreen('home')}
+function goPick(){renderChips();switchScreen('pick')}
+function switchScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+
+function renderChips(){
+  const grid=document.getElementById('chipGrid');
+  grid.innerHTML='';
+  DRINKS.forEach((d,i)=>{
+    const chip=document.createElement('div');
+    chip.className='chip'+(selected.includes(i)?' selected':'');
+    chip.tabIndex=0;
+    chip.innerHTML=`<span class="emoji">${d.emoji}</span><span class="name">${d.name}</span>`;
+    chip.onclick=()=>toggleChip(i);
+    grid.appendChild(chip);
+  });
+  updateCount();
+}
+
+function toggleChip(i){
+  const idx=selected.indexOf(i);
+  if(idx>-1){selected.splice(idx,1);}
+  else if(selected.length<6){selected.push(i);}
+  renderChips();
+}
+
+function updateCount(){
+  document.getElementById('pickCount').textContent=selected.length;
+  document.getElementById('toWheelBtn').disabled=selected.length<2;
+}
+
+function goWheel(){
+  switchScreen('wheel');
+  setTimeout(()=>drawWheel(selected),100);
+  document.getElementById('spinBtn').disabled=false;
+  document.getElementById('spinBtn').textContent='Spin Now';
+  spinning=false;
+}
+
+const colors=['#d4af37','#8a2be2','#e8734a','#2ecc71','#4aa8e8','#e84a8c','#f4d976','#e84ae8'];
+
+function drawWheel(items){
+  const canvas=document.getElementById('wheelCanvas');
+  const ctx=canvas.getContext('2d');
+  const n=items.length;
+  const cx=300,cy=300,r=290;
+  ctx.clearRect(0,0,600,600);
+  const slice=2*Math.PI/n;
+  items.forEach((idx,i)=>{
+    const start=i*slice,end=start+slice;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,end);ctx.closePath();
+    ctx.fillStyle=colors[i%colors.length];ctx.fill();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(start+slice/2);
+    ctx.textAlign='right';ctx.fillStyle='#0b0b0e';
+    ctx.font='bold 22px Inter, sans-serif';
+    ctx.fillText(DRINKS[idx].emoji+' '+DRINKS[idx].name,r-20,6);
+    ctx.restore();
+  });
+}
+
+function spinWheel(){
+  if(spinning)return;
+  spinning=true;
+  const btn=document.getElementById('spinBtn');
+  btn.disabled=true;btn.textContent='Spinning...';
+  const n=selected.length;
+  const winnerPos=Math.floor(Math.random()*n);
+  currentWinner=selected[winnerPos];
+  const slice=360/n;
+  const targetAngle=360*5+360-winnerPos*slice-slice/2;
+  const canvas=document.getElementById('wheelCanvas');
+  canvas.style.transition='transform 3.5s cubic-bezier(.17,.89,.32,1.28)';
+  canvas.style.transform=`rotate(${targetAngle}deg)`;
+  setTimeout(()=>showResult(currentWinner),3700);
+}
+
+function showResult(idx){
+  const d=DRINKS[idx];
+  document.getElementById('resEmoji').textContent=d.emoji;
+  document.getElementById('resName').textContent=d.name;
+  document.getElementById('resGlass').textContent=d.glass;
+  document.getElementById('resDesc').textContent=d.desc;
+  switchScreen('result');
+}
+
+function openRecipe(){
+  const d=DRINKS[currentWinner];
+  document.getElementById('mEmoji').textContent=d.emoji;
+  document.getElementById('mName').textContent=d.name;
+  document.getElementById('mGlass').textContent=d.glass;
+  document.getElementById('mIngredients').innerHTML=d.ingredients.map(x=>`>${x}</li>`).join('');
+  document.getElementById('mMethod').textContent=d.method;
+  document.getElementById('recipeModal').classList.add('active');
+}
+
+function closeRecipe(){document.getElementById('recipeModal').classList.remove('active')}
+document.getElementById('recipeModal').addEventListener('click',e=>{if(e.target.id==='recipeModal')closeRecipe()});
+
+renderChips();
+</script>
+</body>
+</html>
